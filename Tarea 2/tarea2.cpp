@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <cmath> 
+#include <cmath>
 
 class Avion{
 
@@ -24,7 +24,6 @@ Avion split(std::string strToSplit){
 	Avioncito.x = std::stof(strToSplit,&sz);
 	Avioncito.y = std::stof(strToSplit.substr(sz));
 
-	std::cout << "Mi X es " << Avioncito.x << " mientras que mi Y es " << Avioncito.y << ".\n";
 	return Avioncito;
 
 }
@@ -48,7 +47,7 @@ Closest naive(Avion *Anaive, int beg, int fin){
 	for (int i = beg; i < largo; i++){
 		for (int j = i+1; j < largo; j++){
 			float dist = distanciaAviones(Anaive[i],Anaive[j]);
-			if (dist < Min.distancia) {				
+			if (dist < Min.distancia) {
 				Min.A1 = Anaive[i];
 				Min.A2 = Anaive[j];
 				Min.distancia = dist;
@@ -92,7 +91,6 @@ Closest minDist(Closest A1, Closest A2){
 Closest masCercanos(Avion *Aviones, int inicio, int fin){
 
 	if (fin - inicio <= 3){
-
 		Closest cercano;
 		cercano = naive(Aviones,inicio,fin);
 		return cercano;
@@ -119,15 +117,16 @@ Closest masCercanos(Avion *Aviones, int inicio, int fin){
 			j++;
 		}
 	}
-
 	qsort(cercaMitad,j,sizeof(Avion),compareAvionY);
 
 	for (int i = 0; i <= j; i++){
+
+
 		for (int k = i+1; (k <= j) && (abs(cercaMitad[k].y - cercaMitad[i].y) < masCercano.distancia);k++){
 
-			std::cout << "Mi i actual es " << i << " y mi k es " << k << "\n";
 
 			float dist = distanciaAviones(cercaMitad[k],cercaMitad[i]);
+			std::cout << "Mauro <3\n";
 
 			if(dist < masCercano.distancia){
 				masCercano.A1 = cercaMitad[k];
@@ -138,7 +137,7 @@ Closest masCercanos(Avion *Aviones, int inicio, int fin){
 	}
 
 	return masCercano;
-	
+
 }
 
 
@@ -147,14 +146,10 @@ Closest masCercanos(Avion *Aviones, int inicio, int fin){
 int main(int argc, char const *argv[])
 {
 	if (argc < 2){
-
 		std::cout << "No se ha pasado el nombre del input como argumento\n Intentelo otra vez\n";
-
 	}
 	else if (argc > 2){
-
 		std::cout << "Paso muchos argumentos o el nombre contenia un espacio, si es asi ponga el nombre entre comillas\n";
-
 	}
 	else{
 		std::ofstream archivo_salida;
@@ -162,27 +157,27 @@ int main(int argc, char const *argv[])
 		std::string linea;
 		archivo_salida.open ("output.txt");//abrimos el archivo de salida
 		archivo_entrada.open (argv[1]);//abrimos el archivo de entrada
-
-		while(!archivo_entrada.eof()){
-
-			int count;
-			getline(archivo_entrada, linea);
-			count = std::stoi(linea);
+		int count;
+		while(archivo_entrada >> count){
 			Avion Aviones[count];
-
 			for(int i = 0; i < count; i++){
-				getline(archivo_entrada, linea);
-				Aviones[i] = split(linea);
+				archivo_entrada >> Aviones[i].x >> Aviones[i].y;
+				std::cout << Aviones[i].x << " " << Aviones[i].y << '\n';
 			}
 
 			qsort(Aviones,count,sizeof(Avion),compareAvionX);
 
-			Closest Finito = masCercanos(Aviones,0,count);
-			std::cout << "Los aviones mas cercanos son\n" << Finito.A1.x << " " << Finito.A1.y <<"\n" << Finito.A2.x << " " << Finito.A2.y <<"\n\n";
+			Closest Finito = masCercanos(Aviones,0,count-1);
+			std::cout << "Mauro <3\n";
+			//est FinitoFB = naive(Aviones,0,99);
+
+			//std::cout << "Deberia ser " << FinitoFB.A1.x << " " << FinitoFB.A1.y <<"\n" << FinitoFB.A2.x << " " << FinitoFB.A2.y <<"\n\n";
+
+
+			archivo_salida << Finito.A1.x << " " << Finito.A1.y <<"\n" << Finito.A2.x << " " << Finito.A2.y <<"\n\n";
 
 		}
 
-		std::cout << "FIN\n";
 
 	}
 }

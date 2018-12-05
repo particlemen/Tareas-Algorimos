@@ -1,0 +1,2 @@
+main: 
+	g++ tarea2.cpp  -Wall -o AvioncitosChocadores -std=c++11

@@ -98,55 +98,48 @@ Closest masCercanos(Avion *Aviones, int inicio, int fin){
 
 	}
 
-	else{
+	int mitad = (fin + inicio)/2;
 
-		int mitad = (fin + inicio)/2;
+	Closest izq = masCercanos(Aviones, inicio, mitad);
+	Closest der = masCercanos(Aviones, mitad+1, fin);
 
-		Closest izq = masCercanos(Aviones, inicio, mitad);
-		Closest der = masCercanos(Aviones, mitad+1, fin);
+	int midway = (Aviones[mitad].x + Aviones[mitad+1].x)/2;
 
-		int midway = (Aviones[mitad].x + Aviones[mitad+1].x)/2;
+	Closest masCercano = minDist(izq,der);
 
-		Closest masCercano = minDist(izq,der);
+	std::cout << "Mi punto medio corresponde a " << midway << " y la distancia maxima es " << masCercano.distancia <<"\n";
 
-		std::cout << "Mi punto medio corresponde a " << midway << " y la distancia maxima es " << masCercano.distancia <<"\n";
+	Avion cercaMitad[fin-inicio];
+	int j = 0;
 
-		Avion cercaMitad[fin-inicio];
-		int j = 0;
-
-		for (int i = inicio; i < fin; i++){
-			if (abs(Aviones[i].x - midway) < masCercano.distancia){
-				cercaMitad[j] = Aviones[i];
-				j++;
-			}
+	for (int i = inicio; i < fin; i++){
+		if (abs(Aviones[i].x - midway) < masCercano.distancia){
+			cercaMitad[j] = Aviones[i];
+			j++;
 		}
-		qsort(cercaMitad,j,sizeof(Avion),compareAvionY);
-
-		std::cout << "Mi inicio es " << inicio << " mientras que mi fin es " << fin << "\n";
-
-		for (int p = 0; p < j; p++){
-
-
-			for (int k = p+1; k < j ;k++){
-
-				if (abs(cercaMitad[k].y - cercaMitad[p].y) < masCercano.distancia) {
-					break;
-				}
-
-				float dist = distanciaAviones(cercaMitad[k],cercaMitad[p]);
-				std::cout << "Mi k corresponde a " << k << " Mauro <3\n";
-
-				if(dist < masCercano.distancia){
-					masCercano.A1 = cercaMitad[k];
-					masCercano.A2 = cercaMitad[p];
-					masCercano.distancia = dist;
-				}
-			}
-		}
-
-	return masCercano;
-
 	}
+	qsort(cercaMitad,j,sizeof(Avion),compareAvionY);
+
+	std::cout << "Mi inicio es " << inicio << " mientras que mi fin es " << fin << "\n";
+
+	for (int p = 0; p <= j; p++){
+
+
+		for (int k = p+1; (k <= j) && (abs(cercaMitad[k].y - cercaMitad[p].y) < masCercano.distancia) ;k++){
+
+
+			float dist = distanciaAviones(cercaMitad[k],cercaMitad[p]);
+			std::cout << "Mi k corresponde a " << k << " Mauro <3\n";
+
+			if(dist < masCercano.distancia){
+				masCercano.A1 = cercaMitad[k];
+				masCercano.A2 = cercaMitad[p];
+				masCercano.distancia = dist;
+			}
+		}
+	}
+
+return masCercano;
 
 }
 
@@ -177,12 +170,12 @@ int main(int argc, char const *argv[])
 
 			qsort(Aviones,count,sizeof(Avion),compareAvionX);
 
-			Closest Finito = masCercanos(Aviones,0,count);
+			Closest Finito = masCercanos(Aviones,0,count-1);
 			//std::cout << "Mauro <3\n";
-			//est FinitoFB = naive(Aviones,0,99);
+			Closest FinitoFB = naive(Aviones,0,count-1);
 
-			//std::cout << "Deberia ser " << FinitoFB.A1.x << " " << FinitoFB.A1.y <<"\n" << FinitoFB.A2.x << " " << FinitoFB.A2.y <<"\n\n";
-
+			std::cout << "Deberia ser\n" << FinitoFB.A1.x << " " << FinitoFB.A1.y <<"\n" << FinitoFB.A2.x << " " << FinitoFB.A2.y <<"\n\n";
+			std::cout << "Y me dio\n" << Finito.A1.x << " " << Finito.A1.y <<"\n" << Finito.A2.x << " " << Finito.A2.y <<"\n\n";
 
 			archivo_salida << Finito.A1.x << " " << Finito.A1.y <<"\n" << Finito.A2.x << " " << Finito.A2.y <<"\n\n";
 

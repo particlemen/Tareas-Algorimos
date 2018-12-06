@@ -1,6 +1,8 @@
 import random
 
 
-print(10)
-for i in range(10):
-    print random.randint(-300, 300),random.randint(0, 300)
+rnad = 20
+for i in range(rnad):
+	print(1000)
+	for i in range(1000):
+	    print random.uniform(-300, 300),random.uniform(0, 300)

@@ -1,0 +1,3 @@
+- Ejecutar el archivo makefile desde consola estando dentro de la carpeta donde se encuentre.
+- Este ultimo se ejecuta con el comando "make".
+- Luego ejecutar "./AvioncitosChocadores entrada.txt"

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <cstdlib>
 
 class Avion{
 
@@ -91,13 +92,21 @@ Closest minDist(Closest A1, Closest A2){
 Closest masCercanos(Avion *Aviones, int inicio, int fin){
 
 	if (fin - inicio <= 3){
+
+		if (fin - inicio == 1){
+			std::cout << "0 en naive\n";
+		}
+
 		Closest cercano;
 		cercano = naive(Aviones,inicio,fin);
+		if (cercano.distancia == 0){
+			std::cout << "FFEFEFEF\n";
+		}
 		return cercano;
 
 	}
 
-	int mitad = (fin - inicio)/2;
+	int mitad = (fin + inicio)/2;
 
 	Closest izq = masCercanos(Aviones, inicio, mitad);
 	Closest der = masCercanos(Aviones, mitad+1, fin);
@@ -105,8 +114,6 @@ Closest masCercanos(Avion *Aviones, int inicio, int fin){
 	int midway = (Aviones[mitad].x + Aviones[mitad+1].x)/2;
 
 	Closest masCercano = minDist(izq,der);
-
-	std::cout << "Mi punto medio corresponde a " << midway << " y la distancia maxima es " << masCercano.distancia <<"\n";
 
 	Avion cercaMitad[fin-inicio];
 	int j = 0;
@@ -119,27 +126,30 @@ Closest masCercanos(Avion *Aviones, int inicio, int fin){
 	}
 	qsort(cercaMitad,j,sizeof(Avion),compareAvionY);
 
-	for (int i = 0; i <= j; i++){
+
+	for (int p = 0; p <= j; p++){
 
 
-		for (int k = i+1; (k <= j) && (abs(cercaMitad[k].y - cercaMitad[i].y) < masCercano.distancia);k++){
+		for (int k = p+1; (k <= j) && (abs(cercaMitad[k].y - cercaMitad[p].y) < masCercano.distancia) ;k++){
 
 
-			float dist = distanciaAviones(cercaMitad[k],cercaMitad[i]);
-			std::cout << "Mauro <3\n";
+			float dist = distanciaAviones(cercaMitad[k],cercaMitad[p]);
 
-			if(dist < masCercano.distancia){
+			if(dist < masCercano.distancia && dist > 0){
 				masCercano.A1 = cercaMitad[k];
-				masCercano.A2 = cercaMitad[i];
+				masCercano.A2 = cercaMitad[p];
 				masCercano.distancia = dist;
 			}
 		}
 	}
 
-	return masCercano;
+	if (masCercano.distancia == 0){
+		std::cout << "0 al fin\n";
+	}
+
+return masCercano;
 
 }
-
 
 
 
@@ -162,22 +172,16 @@ int main(int argc, char const *argv[])
 			Avion Aviones[count];
 			for(int i = 0; i < count; i++){
 				archivo_entrada >> Aviones[i].x >> Aviones[i].y;
-				std::cout << Aviones[i].x << " " << Aviones[i].y << '\n';
 			}
 
 			qsort(Aviones,count,sizeof(Avion),compareAvionX);
 
 			Closest Finito = masCercanos(Aviones,0,count-1);
-			std::cout << "Mauro <3\n";
-			//est FinitoFB = naive(Aviones,0,99);
-
-			//std::cout << "Deberia ser " << FinitoFB.A1.x << " " << FinitoFB.A1.y <<"\n" << FinitoFB.A2.x << " " << FinitoFB.A2.y <<"\n\n";
-
 
 			archivo_salida << Finito.A1.x << " " << Finito.A1.y <<"\n" << Finito.A2.x << " " << Finito.A2.y <<"\n\n";
 
 		}
 
-
+	return 1;
 	}
 }
